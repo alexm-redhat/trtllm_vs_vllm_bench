@@ -56,7 +56,7 @@ for model_path in ${model_path_list}; do
                 --num_requests ${num_requests} \
                 --max_batch_size ${concurrency} \
                 --tp ${num_gpus} \
-                --report_json "${results_dir}/trtllm_results__model_${model_name}__isl_${isl}__osl_${osl}__TP_${num_gpus}__num-prompts_${num_prompts}__batch_${padded_concurrency}.json" \
+                --report_json "${results_dir}/trtllm_results__model_${model_name}__isl_${isl}__osl_${osl}__TP_${num_gpus}__num-prompts_${num_requests}__batch_${padded_concurrency}.json" \
                 --streaming \
                 $ignore_eos
     done

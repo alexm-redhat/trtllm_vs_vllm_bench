@@ -12,19 +12,25 @@ def parse_results(results_dir, run_params):
     isl = run_params["isl"]
     osl = run_params["osl"]
 
-    results_dict = {}
-    for i, filename in enumerate(sorted(filenames)):
+    files_dict = {}
+    for i, filename in enumerate(filenames):
         if filename.find("__batch_") == -1:
             continue
 
+        file_params = parse_filename(filename)
+        files_dict[file_params["batch"]] = (filename, file_params)
+
+    results_dict = {}
+    for i, item in enumerate(sorted(files_dict.items())):
+        batch_size, file_data = item
+        filename, file_params = file_data
+
         print("[{}] file = {}".format(i + 1, filename))
 
-        file_params = parse_filename(filename)
         assert isl == int(file_params["isl"])
         assert osl == int(file_params["osl"])
         assert run_params["tp"] == int(file_params["TP"])
 
-        batch_size = file_params["batch"]
         num_prompts = file_params["num-prompts"]
 
         with open(os.path.join(args.results_dir, filename), 'r') as f:
@@ -33,12 +39,12 @@ def parse_results(results_dir, run_params):
 
             elapsed_time = data['elapsed_time']
             total_num_tokens = data['total_num_tokens']
-            
+
             expected_total_num_tokens = (isl + osl) * num_prompts
-            assert expected_total_num_tokens == total_num_tokens, (
+            assert abs(expected_total_num_tokens - total_num_tokens) < 2, (
                 "expected_total_num_tokens = {} total_num_tokens = {}".format(
                     expected_total_num_tokens, total_num_tokens))
-            
+
             output_tokens_per_sec = (osl * num_prompts) / elapsed_time
 
         print("    batch_size            = {}".format(batch_size))

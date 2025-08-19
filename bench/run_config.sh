@@ -1,10 +1,11 @@
 # GPUs to use
-cuda_gpus="4,5,6,7"
-num_gpus=4
+cuda_gpus="0,1,2,3,4,5,6,7"
+num_gpus=8
 
 # Run configs
-concurrency_list="1 16 32" # 64 128 256"
-multi_round=20
+#concurrency_list="1 16 32 64 128 256 512 1024"
+concurrency_list="1" #1 16 32 64 128 256 512 1024"
+multi_round=2
 isl=8192
 osl=1024
 model_path_list="nvidia/Llama-3.3-70B-Instruct-FP8"

@@ -44,3 +44,5 @@ You may experience cuda version mismatch on ubuntu. To fix it, run this command:
 ```bash
 uv pip install -U cuda-python==12.8
 ```
+
+Before running random input benchmark, run `trtllm_prepare_dataset.sh` to generate the random samples. `isl` and `osl` vars inside the script are used to define the prompt/decode sizes.

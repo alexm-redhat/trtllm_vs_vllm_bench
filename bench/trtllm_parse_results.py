@@ -9,18 +9,24 @@ from parse_common import (parse_run_params, run_params_to_string,
 def parse_results(results_dir, run_params):
     filenames = os.listdir(results_dir)
 
-    results_dict = {}
-    for i, filename in enumerate(sorted(filenames)):
+    files_dict = {}
+    for i, filename in enumerate(filenames):
         if filename.find("__batch_") == -1:
             continue
 
-        print("[{}] file = {}".format(i + 1, filename))
         file_params = parse_filename(filename)
+        files_dict[file_params["batch"]] = (filename, file_params)
+
+    results_dict = {}
+    for i, item in enumerate(sorted(files_dict.items())):
+        batch_size, file_data = item
+        filename, file_params = file_data
+
+        print("[{}] file = {}".format(i + 1, filename))
+
         assert run_params["isl"] == int(file_params["isl"])
         assert run_params["osl"] == int(file_params["osl"])
         assert run_params["tp"] == int(file_params["TP"])
-
-        batch_size = file_params["batch"]
 
         with open(os.path.join(args.results_dir, filename), 'r') as f:
             data = json.load(f)
