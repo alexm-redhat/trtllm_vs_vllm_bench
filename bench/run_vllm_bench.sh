@@ -2,39 +2,6 @@
 
 source run_config.sh
 
-#-e TLLM_PROFILE_RECORD_GC=1,TLLM_LLMAPI_ENABLE_NVTX=1,TLLM_TORCH_PROFILE_TRACE=trace.json \
-#-c cudaProfilerApi
-
-#TLLM_PROFILE_START_STOP=100-200 
-#-t 'cuda,nvtx,python-gil'
-
-# TLLM_PROFILE_START_STOP=50-100 nsys profile \
-#             -o trace -f true \
-#             -t cuda \
-#             --cuda-graph-trace node \
-#             --trace-fork-before-exec=true \
-#             --stats=true \
-
-####
-# --max-model-len
-# --max-num-seqs 
-# --quantization
-# --trust-remote-code
-# --data-parallel-size
-# --enable-expert-parallel
-# --block-size
-# --gpu-memory-utilization
-# --async-scheduling
-
-#   --delay 180 --duration 60 \
-      
-# nsys profile \
-#         -t cuda \
-#         -o run1 \
-#         -f true \
-#         --trace-fork-before-exec=true \
-#         --cuda-graph-trace=node \
-
 for model_path in ${model_path_list}; do
     model_name=${model_path##*/}
     
@@ -46,7 +13,7 @@ for model_path in ${model_path_list}; do
         num_prompts=$((concurrency * multi_round))
         printf -v padded_concurrency "%05d" ${concurrency}
 
-        CUDA_VISIBLE_DEVICES=${cuda_gpus} \
+        CUDA_VISIBLE_DEVICES=${cuda_gpus} $VLLM_PROFILE_CMD \
             vllm bench throughput \
                 --model ${model_path} \
                 --dataset-name random \
